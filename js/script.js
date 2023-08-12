@@ -42,6 +42,7 @@ function autoroll() {
     }, 10);
 }
 
+// Parar o setInterval
 function stop() {
     clearInterval(interval);
 }
