@@ -2,6 +2,7 @@ const mario = document.querySelector('.mario');
 const pipe = document.querySelector('.pipe');
 
 const jump = () => {
+   
     mario.classList.add('jump');
 
     setTimeout(() => {
@@ -9,28 +10,64 @@ const jump = () => {
     }, 500);
 }
 
-const loop = setInterval(() => {
+document.addEventListener('keydown', jump);
 
-console.log('loop')
+var stylesheet = document.styleSheets[1]
+var fadeOutRule_To = stylesheet.cssRules[0];
+
+var interval;
+var pipePosition;
+var marioPosition;
+
+function autoroll() {
     
-const pipePosition = pipe.offsetLeft;
-const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+    interval = setInterval(() => {
+        pipePosition = pipe.offsetLeft;
+        marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
 
-if (pipePosition <= 120 && pipePosition > 0 && marioPosition < 80){
+        if (pipePosition <= 120 && pipePosition > 0 && marioPosition < 80) {
+            pipe.style.animation = 'none';
+            pipe.style.left = `${pipePosition}px`;
 
-    pipe.style.animation = 'none';
-    pipe.style.left = `${pipePosition}px`;
+            mario.style.animation = 'none';
+            mario.style.bottom = `${marioPosition}px`;
 
-    mario.style.animation = 'none';
-    mario.style.bottom = `${marioPosition}px`;
+            mario.src = './imagens/game-over.png';
+            mario.style.width = '70px'
+            mario.style.marginLeft = '50px'
 
-    mario.src = './imagens/game-over.png';
-    mario.style.width = '70px'
-    mario.style.marginLeft = '50px'
+            stop();
+        }
 
-    clearInterval(loop);
+    }, 10);
 }
 
-}, 10);
+function stop() {
+    clearInterval(interval);
+}
 
-document.addEventListener('keydown', jump);
+
+document.addEventListener('keypress', function (e) {
+    if (e.keyCode == 13) {       
+        autoroll()
+        console.log("I:", interval);
+
+        mario.style.width = '170px'
+        mario.src = './imagens/mario.gif';
+        mario.style.marginLeft = '50px'
+
+        pipe.style = fadeOutRule_To.cssText
+        mario.style.bottom = 0
+    }
+});
+
+
+
+
+autoroll()
+
+
+
+
+// Iniciar frame
+
